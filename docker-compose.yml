@@ -4,6 +4,7 @@ version: '3.8'
 # Define all the services (containers) for the application
 services:
   
+
   # ================= API Gateway ====================
   api-gateway:
     # Build the image using the Dockerfile in ./api-gateway
@@ -36,6 +37,7 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+
 
   # ================= Post Service ====================
   post-service:
