@@ -1,0 +1,106 @@
+# Use Docker Compose file format version 3.8
+version: '3.8'
+
+# Define all the services (containers) for the application
+services:
+  
+  # ================= API Gateway ====================
+  api-gateway:
+    # Build the image using the Dockerfile in ./api-gateway
+    build: ./api-gateway
+
+    # Map port 8000 on the host to port 8000 in the container
+    ports:
+      - "8000:8000"
+
+    # Load environment variables from .env file in api-gateway directory
+    env_file: ./api-gateway/.env
+
+    # Ensure redis and rabbitmq containers start before this service
+    depends_on:
+      - redis
+      - rabbitmq
+
+    # Set environment variables inside the container
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  # ================= Identity Service ====================
+  identity-service:
+    build: ./identity-service
+    env_file: ./identity-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  # ================= Post Service ====================
+  post-service:
+    build: ./post-service
+    env_file: ./post-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  # ================= Media Service ====================
+  media-service:
+    build: ./media-service
+    env_file: ./media-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  # ================= Search Service ====================
+  search-service:
+    build: ./search-service
+    env_file: ./search-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  # ================= Redis Service ====================
+  redis:
+    # Use the official Redis image (lightweight version)
+    image: redis:alpine
+
+    # Expose Redis default port
+    ports:
+      - "6379:6379"
+
+  # ================= RabbitMQ Service ====================
+  rabbitmq:
+    # Use RabbitMQ with the management interface
+    image: rabbitmq:3-management
+
+    # Expose ports:
+    # - 5672: for internal communication (apps)
+    # - 15672: for the RabbitMQ management dashboard (UI)
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    # Add a healthcheck to verify if RabbitMQ is ready
+    healthcheck:
+      # Run `rabbitmq-diagnostics -q ping` command
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+
+      # Run healthcheck every 30 seconds
+      interval: 30s
+
+      # Timeout if the command doesn't respond in 10 seconds
+      timeout: 10s
+
+      # Retry up to 5 times before marking the container unhealthy
+      retries: 5
