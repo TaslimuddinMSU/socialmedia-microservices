@@ -1,3 +1,58 @@
-node_modules
+# Node modules - don't commit dependencies
+node_modules/
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
 .env
+.env.local
+.env.*.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor-specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Build output
+dist/
+build/
+coverage/
+
+# Dependency directories from package managers
+.pnpm-debug.log
+package-lock.json
+yarn.lock
+.pnp.*
+.pnp
+
+# Optional: ignore Docker files
+docker-compose.override.yml
+
+# Optional: ignore test coverage output
+coverage/
+.nyc_output/
+
+# Optional: ignore compiled files (e.g. TypeScript)
+*.tsbuildinfo
+
+# Optional: ignore local database or cache files
+*.sqlite
+.cache/
+tmp/
+
+# Optional: ignore lint and format caches
+.eslintcache
+.prettiercache
+
+# Optional: ignore local debug folders
+.nodemon-debug.json
