@@ -16,5 +16,6 @@ COPY . .
 # Expose port
 EXPOSE 8002
 
+
 # Start the app
 CMD ["node", "src/server.js"]
